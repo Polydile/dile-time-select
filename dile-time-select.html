@@ -1,0 +1,299 @@
+<link rel="import" href="./bower_components/polymer/polymer-element.html">
+<link rel="import" href="./bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="./bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="./bower_components/shadycss/apply-shim.html">
+<link rel="import" href="./dile-simple-select.html">
+
+<dom-module id="dile-time-select">
+  <template>
+    <style>
+      :host {
+        display: inline;
+      }
+
+      div {
+        @apply --dile-time-select-box;
+      }
+      --dile-simple-select-box {
+        border: 2px yellow;
+        background-color: pink;
+      }
+      --simple-select-error {
+        border: 5px blue dotted;
+      }
+    </style>
+    <div>
+      <dile-simple-select 
+        datalabel='[[hourlabel]]' 
+        data-array='[[hourArray]]' 
+        on-dataselected="hourChange"
+        nullvalue="[[nullvalue]]"
+        seldata="[[hour]]"
+      ></dile-simple-select>
+      <dile-simple-select 
+        datalabel='[[minutelabel]]' 
+        data-array='[[minuteArray]]' 
+        on-dataselected="minuteChange"
+        nullvalue="[[nullvalue]]"
+        seldata="[[minute]]"
+      ></dile-simple-select>
+      <template is="dom-if" if="[[shortMode]]">
+        <dile-simple-select
+          datalabel='[[ampmlabel]]'
+          data-array="[[ampmArray]]"
+          on-dataselected="ampmChange"
+          nullvalue="[[nullvalue]]"
+          seldata="[[ampm]]"
+        ></dile-simple-select>
+      </template>
+      <p>Dato: [[value]]</p>
+    </div>
+  </template>
+
+  <script>
+    /**
+     * `dile-time-select`
+     * A component to select a time.
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class DileTimeSelect extends (class extends Polymer.Element { }) {
+      static get is() { return 'dile-time-select'; }
+      static get properties() {
+        return {
+          /**
+           * The label shown on the hour selector
+           * @type {string}
+           */
+          hourlabel: {
+            type: String,
+            value: 'hour'
+          },
+          /**
+           * The selected hour, this can be set in order to show the component
+           * with a preselected time
+           * @type {String}
+           */
+          hour: {
+            type: String,
+            notify: true,
+            observer: '_checkhour'
+          },
+          /**
+           * The label shown on the minute selector
+           * @type {string}
+           */
+          minutelabel: {
+            type: String,
+            value: 'minute'
+          },
+          /**
+           * The selected minute, this can be set in order to show the component
+           * with a preselected time
+           * @type {Number}
+           */
+          minute: {
+            type: String,
+            notify: true,
+            observer: '_checkminute'
+          },
+          ampmlabel: {
+            type: String,
+            value: 'AM/PM'
+          },
+          /**
+           * The selected AM/PM indicator if needed, this can be set in order to show
+           * the component with a preselected time
+           * @type {String}
+           */
+          ampm: {
+            type: String,
+            notify: true,
+            observer: '_checkampm'
+          },
+          /**
+           * The value used to show on the component without selected time
+           *@type {String}
+           */
+          nullvalue: {
+            type: String
+          },
+          /**
+           * The hour format (12 or 24) for the hour selector
+           * @type {number}
+           */
+          hourformat: {
+            type: String,
+            value: '24',
+            observer: '_loadhours'
+          },
+          /**
+           * The number of minutes on each option of the minute selector
+           * @type {number}
+           */
+          minutssequence: {
+            type: Number,
+            value: 1,
+            observer: '_loadminutes'
+          },
+          /**
+           * Indicates the need to show the AM/PM indicator
+           * @type {Boolean}
+           */
+           shortMode: {
+            type: Boolean,
+            value: false,
+            readOnly: true
+          },
+          /**
+           * The full time selected in edited format
+           * @type {String}
+           */
+          value: {
+            type: String,
+            value: '',
+            readOnly: true
+          },
+          /**
+           * The list of hours used to load the hours select control
+           * @type {array}
+           */
+          hourArray: {
+            type: Array,
+            value: function () {
+              return []
+            },
+            readOnly: true
+          },
+          /**
+           * The list of minutes used to load the minutes select control
+           * @type {array}
+           */
+          minuteArray: {
+            type: Array,
+            value: function () {
+              return []
+            },
+            readOnly: true
+          },
+          /**
+           * The list of am/pm used to load the ampm select control
+           * @type {array}
+           */
+          ampmArray: {
+            type: Array,
+            value: function () {
+              return []
+            },
+            readOnly: true
+          }
+        };
+      }
+      /**
+        * Array of strings describing multi-property observer methods and their
+        * dependant properties
+        */
+      static get observers() {
+        return [
+          '_timeChanged(hour,minute,ampm)'
+        ];
+      }
+
+      _checkhour(ndata, odata) {
+        if (this.hourArray.indexOf(ndata) == -1)
+          this.hour = this.nullvalue;
+      }
+      _checkminute(ndata, odata) {
+        if (this.minuteArray.indexOf(ndata) == -1)
+          this.minute = this.nullvalue;
+      }
+      _checkampm(ndata, odata) {
+        if (this.ampmArray.indexOf(ndata) == -1)
+          this.ampm = this.nullvalue;
+      }
+
+      _loadhours(ndata, odata) {
+        var ini,fin;
+        switch (ndata) {
+          case '12':
+            ini = 1;
+            fin = 12;
+            this._setShortMode(true);
+            break;
+          case '24':
+          default:
+            ini = 0;
+            fin = 23;
+            this._setShortMode(false);
+            this.hourformat = '24';
+            break;
+        }
+        this._setHourArray([]);
+        this.hourArray.push (this.nullvalue);
+        for (var x = ini; x <= fin; x++) {
+          this.hourArray.push( x < 10 ? '0' + x : '' + x);
+        }
+        if (this.shortMode) {
+          this._setAmpmArray([this.nullvalue,'AM','PM']);
+        }
+      }
+      _loadminutes(ndata, odata) {
+        var interval = 60 / ndata;
+        if (!isFinite(interval)) {
+          ndata = 1;
+          interval = 60;
+        }
+        this._setMinuteArray([]);
+        this.minuteArray.push(this.nullvalue);
+        for (var x = 0; x < interval ; x++) {
+          var k = x * ndata;
+          this.minuteArray.push( k < 10 ? '0' + k : '' + k);
+        }
+      }
+
+      _timeChanged(hour, minute, ampm) {
+        if (hour == this.nullvalue || this.hourArray.indexOf(hour) == -1) {
+          return;
+        }
+        if (minute == this.nullvalue || this.minuteArray.indexOf(minute) == -1) {
+          return;
+        }
+        if (this.shortMode) {
+          if (ampm == this.nullvalue || this.ampmArray.indexOf(ampm) == -1) {
+            return;
+          }
+        }
+        var result = this.hour;
+        result += ':' + this.minute;
+        if (this.shortMode) {
+          result += ' ' + this.ampm;
+        }
+        this._setValue(result);
+        this.dispatchEvent(new CustomEvent('timeselected', {
+          detail: {
+            time: this.value
+          }
+        }));
+      }
+      hourChange(ev) {
+        this.hour = ev.detail.data;
+        if (!ev.detail.valid)
+          this._setValue('');
+      }
+      minuteChange(ev) {
+        this.minute = ev.detail.data;
+        if (!ev.detail.valid)
+          this._setValue('');
+      }
+      ampmChange(ev) {
+        this.ampm = ev.detail.data;
+        if (!ev.detail.valid)
+          this._setValue('');
+      }
+    }
+
+    window.customElements.define(DileTimeSelect.is, DileTimeSelect);
+  </script>
+</dom-module>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>dile-time-select demo</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../bower_components/iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../bower_components/iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../dile-time-select.html">
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+      </style>
+    </custom-style>
+    <style>
+      --dile-time-select-box {
+        border: 5px solid yellow;
+        background-color: lightblue;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+<!--      <h3>Basic dile-time-select demo</h3>
+      <demo-snippet>
+        <template>
+          <dile-time-select></dile-time-select>
+        </template>
+      </demo-snippet> -->
+      <h3>Basic 12 hours dile-time-select demo</h3>
+      <demo-snippet>
+        <template>
+          <dile-time-select 
+            hourlabel="hora" 
+            minutsSequence="15" 
+            hourFormat="12" 
+            minutelabel="minuto"
+            ampmlabel="Mañana/Tarde"
+            hour="05"
+            minute="17"
+            ampm="ZZ"
+            nullvalue="--"
+          ></dile-time-select>
+        </template>
+      </demo-snippet>
+<!--      <h3>Basic erroneous dile-time-select demo</h3>
+      <demo-snippet>
+        <template>
+          <dile-time-select hourFormat=5></dile-time-select>
+        </template>
+      </demo-snippet> -->
+    </div>
+  </body>
+</html>

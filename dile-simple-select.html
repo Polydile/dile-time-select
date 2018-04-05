@@ -1,0 +1,129 @@
+<link rel="import" href="./bower_components/polymer/polymer-element.html">
+<link rel="import" href="./bower_components/shadycss/apply-shim.html">
+
+<dom-module id="dile-simple-select">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+      }
+      div {
+        @apply --dile-simple-select-box;
+      }
+      label {
+        margin-left: 3px;
+        margin-right: 3px;
+      }
+      .error {
+        border: red solid;
+        @apply --simple-select-error;
+      }
+      .okay {
+        border: select;
+        @apply --simple-select-ok;
+      }
+    </style>
+    <div>
+      <label for="theselect">[[datalabel]]</label>
+      <select value="{{seldata::change}}" id="theselect" class$="[[selclass]]">
+        <template is="dom-repeat" items="{{dataArray}}">
+          <template is="dom-if" if="{{selecdata(index)}}">
+            <option value="[[item]]" selected>[[item]]</option>
+          </template>
+          <template is="dom-if" if="{{!selecdata(index)}}">
+            <option value="[[item]]">[[item]]</option>
+          </template>
+        </template>
+      </select>
+    </div>
+  </template>
+
+  <script>
+    /**
+     * `dile-simple-select`
+     * A component that shows a single select html element
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class DileSimpleSelect extends (class extends Polymer.Element { }) {
+      static get is() { return 'dile-simple-select'; }
+      static get properties() {
+        return {
+          /**
+           * The data selected on the component
+           *
+           * @type {String}
+           */
+          seldata: {
+            type: String,
+            observer: '_datachange'
+          },
+          /**
+           * The CSS class to show on component
+           * possible values: 'error', 'okay'
+           *
+           * @type {String}
+           */
+           selclass: {
+            type: String,
+            value: 'error'
+          },
+          /**
+           * The data to show on the drop area of the component
+           *
+           * @type {Array}
+           */
+          dataArray: Array,
+          /**
+           * The label show on the left of the component
+           *
+           * @type {String}
+           */
+          datalabel: String,
+          /**
+           * The value used to detect an invalid value
+           *
+           * @type {String}
+           */
+          nullvalue: {
+            type: String,
+            value: '--'
+          }
+        };
+      }
+      ready() {
+        super.ready();
+      }
+      /**
+        * Used to select an initial value on the drop area
+        *
+        *
+        */
+      selecdata(index) {
+        if (this.seldata == this.dataArray[index])
+          return true;
+        return false;
+      }
+      _datachange(ndata,odata) {
+        var valid = true;
+        if (ndata == this.nullvalue) {
+          this.selclass = 'error';
+          valid = false;
+        } else {
+          this.selclass = 'okay';
+        }
+        this.dispatchEvent(new CustomEvent('dataselected',{
+          detail: {
+            data: ndata,
+            valid: valid
+          }
+        }));
+      }
+    }
+
+    window.customElements.define(DileSimpleSelect.is, DileSimpleSelect);
+  </script>
+</dom-module>
