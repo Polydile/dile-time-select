@@ -1,21 +1,21 @@
 # \<dile-time-select\>
 
-A component to select a time.
+Polymer component to select a time with a selectable format.
 
-## Install the Polymer-CLI
+`<dile-time-select>`
 
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your element locally.
+## Polymer element to select a time
 
-## Viewing Your Element
+Polymer component that permits selection of a time in several formats.
 
+You can define the time format (12/24), the interval for the minutes selector.
+
+It is posible to show the component with a predefined time selected.
+
+```html
+<dile-time-select
+  hourFormat="24"
+  minutsSequence="15"
+></dile-time-select>
 ```
-$ polymer serve
-```
 
-## Running Tests
-
-```
-$ polymer test
-```
-
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
