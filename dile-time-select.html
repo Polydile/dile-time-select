@@ -46,7 +46,6 @@
           seldata="[[ampm]]"
         ></dile-simple-select>
       </template>
-      <p>Dato: [[value]]</p>
     </div>
   </template>
 
@@ -154,6 +153,7 @@
           value: {
             type: String,
             value: '',
+            notify: true,
             readOnly: true
           },
           /**
@@ -201,22 +201,22 @@
         ];
       }
 
-      _checkhour(ndata, odata) {
-        if (this.hourArray.indexOf(ndata) == -1)
+      _checkhour(newhour) {
+        if (this.hourArray.indexOf(newhour) == -1)
           this.hour = this.nullvalue;
       }
-      _checkminute(ndata, odata) {
-        if (this.minuteArray.indexOf(ndata) == -1)
+      _checkminute(newminute) {
+        if (this.minuteArray.indexOf(newminute) == -1)
           this.minute = this.nullvalue;
       }
-      _checkampm(ndata, odata) {
-        if (this.ampmArray.indexOf(ndata) == -1)
+      _checkampm(newampm) {
+        if (this.ampmArray.indexOf(newampm) == -1)
           this.ampm = this.nullvalue;
       }
 
-      _loadhours(ndata, odata) {
+      _loadhours(newformat) {
         var ini,fin;
-        switch (ndata) {
+        switch (newformat) {
           case '12':
             ini = 1;
             fin = 12;
@@ -239,16 +239,16 @@
           this._setAmpmArray([this.nullvalue,'AM','PM']);
         }
       }
-      _loadminutes(ndata, odata) {
-        var interval = 60 / ndata;
+      _loadminutes(newminutssequence) {
+        var interval = 60 / newminutssequence;
         if (!isFinite(interval)) {
-          ndata = 1;
+          newminutssequence = 1;
           interval = 60;
         }
         this._setMinuteArray([]);
         this.minuteArray.push(this.nullvalue);
         for (var x = 0; x < interval ; x++) {
-          var k = x * ndata;
+          var k = x * newminutssequence;
           this.minuteArray.push( k < 10 ? '0' + k : '' + k);
         }
       }

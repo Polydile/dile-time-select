@@ -107,9 +107,9 @@
           return true;
         return false;
       }
-      _datachange(ndata,odata) {
+      _datachange(newvalue) {
         var valid = true;
-        if (ndata == this.nullvalue) {
+        if (newvalue == this.nullvalue) {
           this.selclass = 'error';
           valid = false;
         } else {
@@ -117,7 +117,7 @@
         }
         this.dispatchEvent(new CustomEvent('dataselected',{
           detail: {
-            data: ndata,
+            data: newvalue,
             valid: valid
           }
         }));
