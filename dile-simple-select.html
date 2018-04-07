@@ -24,9 +24,9 @@
       }
     </style>
     <div>
-      <label for="theselect">[[datalabel]]</label>
+      <label for="theselect">[[customLabel]]</label>
       <select value="{{seldata::change}}" id="theselect" class$="[[selclass]]">
-        <template is="dom-repeat" items="{{dataArray}}">
+        <template is="dom-repeat" items="{{customData}}">
           <template is="dom-if" if="{{selecdata(index)}}">
             <option value="[[item]]" selected>[[item]]</option>
           </template>
@@ -76,13 +76,13 @@
            *
            * @type {Array}
            */
-          dataArray: Array,
+          customData: Array,
           /**
            * The label show on the left of the component
            *
            * @type {String}
            */
-          datalabel: String,
+          customLabel: String,
           /**
            * The value used to detect an invalid value
            *
@@ -103,7 +103,7 @@
         *
         */
       selecdata(index) {
-        if (this.seldata == this.dataArray[index])
+        if (this.seldata == this.customData[index])
           return true;
         return false;
       }

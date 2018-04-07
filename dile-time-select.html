@@ -24,23 +24,23 @@
     </style>
     <div>
       <dile-simple-select 
-        datalabel='[[hourlabel]]' 
-        data-array='[[hourArray]]' 
+        custom-label='[[hourlabel]]' 
+        custom-data='[[hourArray]]' 
         on-dataselected="hourChange"
         nullvalue="[[nullvalue]]"
         seldata="[[hour]]"
       ></dile-simple-select>
       <dile-simple-select 
-        datalabel='[[minutelabel]]' 
-        data-array='[[minuteArray]]' 
+        custom-label='[[minutelabel]]' 
+        custom-data='[[minuteArray]]' 
         on-dataselected="minuteChange"
         nullvalue="[[nullvalue]]"
         seldata="[[minute]]"
       ></dile-simple-select>
       <template is="dom-if" if="[[shortMode]]">
         <dile-simple-select
-          datalabel='[[ampmlabel]]'
-          data-array="[[ampmArray]]"
+          custom-label='[[ampmlabel]]'
+          custom-data="[[ampmArray]]"
           on-dataselected="ampmChange"
           nullvalue="[[nullvalue]]"
           seldata="[[ampm]]"
